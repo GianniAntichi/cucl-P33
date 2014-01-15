@@ -52,7 +52,6 @@
 #include "lwip/memp.h"
 #include "lwip/transport_subsys.h"
 
-#include "sr_vns.h"
 #include "sr_base.h"
 #include "sr_base_internal.h"
 #include "debug.h"
@@ -133,7 +132,7 @@ static char* gen_logfile( unsigned topo, char* host ) {
 
 int sr_init_low_level_subystem(int argc, char **argv)
 {
-    /* -- VNS default parameters -- */
+    
     char  *host   = "vrhost";
     char  *rtable = "rtable.conf";
     char  *itable = CPU_HW_FILENAME;
@@ -239,9 +238,7 @@ int sr_init_low_level_subystem(int argc, char **argv)
 #else   /* not CPUMODE or MININET_MODE */
 # ifdef _MANUAL_MODE_
     Debug("< -- Starting sr in Manual router mode -- >");
-# else  /* VNS_MODE */
-    Debug("< -- Starting sr in VNS router mode  -- >");
-# endif /* MANUAL_MODE / VNS_MODE */
+# endif /* MANUAL_MODE */
 #endif  /* CPUMODE */
 #endif  /* MININET_MODE */
 
@@ -258,7 +255,6 @@ int sr_init_low_level_subystem(int argc, char **argv)
     strncpy(sr->rtable, rtable, SR_NAMELEN);
 
     // topo_id for MININET_MODE, _CPUMODE_ and _MANUAL_MODE
-    // (overwritten in the case of VNS)
     sr->topo_id = 0;
 
 #if defined MININET_MODE || defined _CPUMODE_
@@ -274,32 +270,10 @@ int sr_init_low_level_subystem(int argc, char **argv)
         strncpy(sr->vhost,  "cpu",    SR_NAMELEN);
         strncpy( sr->server, "hw mode (no server)", SR_NAMELEN );
 #   endif /* MININET_MODE */
-#else     /* NOT _CPUMODE_ or MININET_MODE (i.e. manual or VNS) */
+#else     /* NOT _CPUMODE_ or MININET_MODE (i.e. manual) */
 # ifdef _MANUAL_MODE_
     strncpy( sr->vhost, "manual", SR_NAMELEN );
     strncpy( sr->server, "manual mode (no server)", SR_NAMELEN );
-# else   /* it's VNS */
-    sr->topo_id = topo;
-    strncpy(sr->vhost,  host,    SR_NAMELEN);
-    strncpy( sr->server, server, SR_NAMELEN );
-    Debug("Client %s connecting to Server %s:%d\n",
-            sr->user, server, port);
-    Debug("Requesting topology %d\n", topo);
-
-    /* -- connect to VNS and reserve host -- */
-    if(sr_vns_connect_to_server(sr,port,server) == -1)
-    { return 1; }
-
-    /* read from server until the hardware is setup */
-    while (! sr->hw_init )
-    {
-        if(sr_vns_read_from_server(sr) == -1 )
-        {
-            sr_destroy_instance(sr);
-            die( "Error: could not get hardware information from the VNS server" );
-        }
-    }
-    Debug("Hardware retrieved from VNS server\n");
 # endif /* MANUAL_MODE */
 #endif  /* _CPUMODE_ or MININET_MODE */
 
@@ -314,11 +288,6 @@ int sr_init_low_level_subystem(int argc, char **argv)
         perror("gethostname(..)");
         return 1;
     }
-
-    /* -- log all packets sent/received to logfile (if non-null) -- */
-    sr_vns_init_log(sr, logfile);
-    if( free_logfile ) free( logfile );
-
     sr_lwip_transport_startup();
 
 
@@ -331,7 +300,6 @@ int sr_init_low_level_subystem(int argc, char **argv)
 #   ifdef _MANUAL_MODE_
       sr_manual_init( sr );
 #   endif /* _MANUAL_MODE_ */
-#else     /* _VNS_MODE_ */
 
 #endif  /* _MANUAL_MODE_ || MININET_MODE */
 #endif  /* ifndef _CPUMODE_ */
@@ -403,8 +371,6 @@ static void sr_low_level_network_subsystem(void *arg) {
 # else
 #  ifdef MININET_MODE
 #    define SR_LOW_LEVEL_READ_METHOD sr_mininet_read_packet(sr)
-#  else   /* _VNS_MODE_ */
-#    define SR_LOW_LEVEL_READ_METHOD sr_vns_read_from_server(sr)
 #  endif  /* MININET_MODE */
 # endif   /* _MANUAL_MODE_ */
 #endif    /* _CPUMODE_ */
@@ -510,7 +476,7 @@ static void usage(char* argv0)
     printf("SR -- user space Simple Routing program\n");
     printf("Format: %s [-h] -z router_name [-n]\n",argv0);
     printf("             [-r rtable_file] [-l log_file] [-i interface_file]\n");
-  #else  /* NETFPGA, VNS or MANUAL modes */
+  #else  /* NETFPGA or MANUAL modes */
     printf("Simple Router Client\n");
     printf("Format: %s [-h] [-v host] [-s server] [-p port] [-n] \n",argv0);
     printf("             [-t topo id] [-r rtable_file] [-l log_file] [-i interface_file]\n");

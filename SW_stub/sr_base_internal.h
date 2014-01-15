@@ -66,21 +66,6 @@ int original_main(int argc, char** argv);
   (unsigned char)(x[ivyl])); fprintf(stderr,"%02x",(unsigned char)(x[5])); } while (0)
 #endif
 
-/* ----------------------------------------------------------------------------
- * struct sr_vns_if
- *
- * Abstraction for a VNS virtual host interface
- *
- * -------------------------------------------------------------------------- */
-
-struct sr_vns_if
-{
-    char name[SR_NAMELEN];
-    unsigned char addr[6];
-    uint32_t ip; /* nbo? */
-    uint32_t mask;
-    uint32_t speed;
-};
 
 /* ----------------------------------------------------------------------------
  * struct sr_instance
@@ -139,8 +124,6 @@ void sr_integ_input(struct sr_instance* sr,
 #else
                     const char* interface );
 #endif
-void sr_integ_add_interface(struct sr_instance*,
-                            struct sr_vns_if* /* borrowed */);
 
 int sr_integ_output(struct sr_instance* sr /* borrowed */,
                     uint8_t* buf /* borrowed */ ,

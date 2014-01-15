@@ -95,9 +95,6 @@ void cli_show_all();
 #   define cli_show_hw_arp   cli_send_no_hw_str
 #   define cli_show_hw_intf  cli_send_no_hw_str
 #   define cli_show_hw_route cli_send_no_hw_str
-#   ifndef _MANUAL_MODE_
-#       define _VNS_MODE_
-#   endif
 #else
     void cli_show_hw();
     void cli_show_hw_about();
@@ -118,22 +115,13 @@ void cli_show_ospf();
 void cli_show_ospf_neighbors();
 void cli_show_ospf_topo();
 
-#ifndef _VNS_MODE_
-    void cli_send_no_vns_str();
+void cli_send_no_vns_str();
 #   define cli_show_vns        cli_send_no_vns_str
 #   define cli_show_vns_lhost  cli_send_no_vns_str
 #   define cli_show_vns_server cli_send_no_vns_str
 #   define cli_show_vns_topo   cli_send_no_vns_str
 #   define cli_show_vns_user   cli_send_no_vns_str
 #   define cli_show_vns_vhost  cli_send_no_vns_str
-#else
-    void cli_show_vns();
-    void cli_show_vns_lhost();
-    void cli_show_vns_server();
-    void cli_show_vns_topo();
-    void cli_show_vns_user();
-    void cli_show_vns_vhost();
-#endif
 
 void cli_manip_ip_arp_add( gross_arp_t* data );
 void cli_manip_ip_arp_del( gross_arp_t* data );

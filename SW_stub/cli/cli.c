@@ -74,18 +74,6 @@ static void cli_send_str( const char* str ) {
             fd_alive = FALSE;
 }
 
-#ifdef _VNS_MODE_
-/**
- * Wrapper for writenstr.  Tries to send the specified string followed by a
- * newline with the file-scope fd.  If it fails, fd_alive is set to FALSE.  Does
- * nothing if fd_alive is already FALSE.
- */
-static void cli_send_strln( const char* str ) {
-    if( fd_alive )
-        if( 0 != writenstrs( fd, 2, str, "\n" ) )
-            fd_alive = FALSE;
-}
-#endif
 
 /**
  * Wrapper for writenstrs.  Tries to send the specified string(s) with the

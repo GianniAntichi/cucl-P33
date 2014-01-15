@@ -34,7 +34,6 @@ both : pool tpp
 # or manually
 # Note how similar 'MANUAL' and 'MININET' look, and remember they're different!
 MODE_NETFPGA = -D_CPUMODE_
-MODE_VNS     = -D_VNS_MODE_
 MODE_MININET = -DMININET_MODE
 MODE_MANUAL  = -D_MANUAL_MODE_
 MODE = $(MODE_MININET)
@@ -82,7 +81,7 @@ liblwtcp.a : $(LWTCP_OBJS)
 
 #------------------------------------------------------------------------------
 SR_BASE_SRCS = sr_base.c sr_dumper.c sr_integration.c sr_lwtcp_glue.c\
-               sr_vns.c sr_cpu_extension_nf2.c real_socket_helper.c \
+               sr_cpu_extension_nf2.c real_socket_helper.c \
                debug.c sr_mininet_extension.c
 
 SR_BASE_OBJS = $(patsubst %.c,%.o,$(SR_BASE_SRCS)) common/nf10util.o common/nf_util.o

@@ -9,8 +9,6 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "sr_vns.h"
 #include "sr_base_internal.h"
 
 #ifdef _CPUMODE_
@@ -26,8 +24,8 @@
 #include "sr_dumper.h"
 
 /**
- * First method called during router initialization.  Called before connecting
- * to VNS, reading in hardware information etc.
+ * First method called during router initialization.
+ * Reading in hardware information etc.
  */
 void sr_integ_init(struct sr_instance* sr) {
     debug_println( "Initializing the router subsystem" );
@@ -55,8 +53,7 @@ void sr_integ_hw_setup( struct sr_instance* sr ) {
  * interface are passed in as parameters. The packet is complete with
  * ethernet headers.
  *
- * Note: Both the packet buffer and the character's memory are handled
- * by sr_vns_comm.c that means do NOT delete either.  Make a copy of the
+ * Note: Make a copy of the
  * packet instead if you intend to keep it around beyond the scope of
  * the method call.
  */
@@ -93,13 +90,6 @@ void sr_integ_input(struct sr_instance* sr,
 #endif
 }
 
-/**
- * Called for each interface read in during hardware initialization.
- * struct sr_vns_if is defined in sr_base_internal.h
- */
-void sr_integ_add_interface(struct sr_instance* sr,
-                            struct sr_vns_if* vns_if /* borrowed */ ) {
-}
 
 struct sr_instance* get_sr() {
     struct sr_instance* sr;
@@ -115,7 +105,6 @@ router_t* get_router() {
 
 
 /**
- * Send a packet to VNS to be injected into the topology
  *
  * @return -1 on error and prints a message to stderr. Otherwise, 0 is returned.
  */
@@ -132,8 +121,6 @@ int sr_integ_low_level_output(struct sr_instance* sr /* borrowed */,
 #  ifdef _MANUAL_MODE_
     sr_log_packet(sr,buf,len);
     return sr_manual_send_packet( sr, buf /*lent*/, len, intf->name );
-#  else
-    return sr_vns_send_packet(sr, buf /*lent*/, len, intf->name);
 #  endif  /* _MANUAL_MODE_ */
 # endif   /* MININET_MODE  */
 #endif    /* _CPUMODE_     */
