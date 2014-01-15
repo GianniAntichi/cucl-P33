@@ -1,10 +1,5 @@
-File: README
-Date: Tue Feb 03 15:57:46 PST 2004 
-Last Modified: Wed Apr 04 06:18:07 PDT 2007 
-Author: Martin Casado
-
 This directory contains the code base for developing a functional 
-internet router that supports TCP and user level programs. 
+internet router. 
 
 Decsription of Files:
 
