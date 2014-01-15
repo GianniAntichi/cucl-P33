@@ -30,7 +30,7 @@ tpp :
 
 both : pool tpp
 
-# MODE controls whether the router gets/sends packets from/to the NetFPGA, VNS, mininet
+# MODE controls whether the router gets/sends packets from/to the NetFPGA, mininet
 # or manually
 # Note how similar 'MANUAL' and 'MININET' look, and remember they're different!
 MODE_NETFPGA = -D_CPUMODE_

@@ -16,8 +16,7 @@ Decsription of Files:
 
  - sr_base.c :  Entry point to the full low level networking code.  sr_base
                 is responsible for housing the "global" instance of the
-                router, starting the transport subsystem, and managing the
-                connection to the VNS. 
+                router and starting the transport subsystem.
 
  - sr_integration.c : Contains all the methods which need to be 
                       extended to support a full running router.  This

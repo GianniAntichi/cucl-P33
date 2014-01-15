@@ -76,7 +76,6 @@ int original_main(int argc, char** argv);
 
 struct sr_instance
 {
-  /* VNS specific */
   int  sockfd;    /* socket to server */
   char user[32];  /* user name */
   char vhost[32]; /* host name */

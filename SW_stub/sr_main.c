@@ -7,9 +7,7 @@
  * Description:
  *
  * Main function for sr_router.  Here we basically handle the command
- * line options and start the 'lower level' routing functionality which
- * involves connecting to the VNS server and negotiating the topology
- * and host information.
+ * line options and start the 'lower level' routing functionality
  *
  * The router functionality should be extended to support:
  *
